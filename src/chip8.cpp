@@ -48,22 +48,11 @@ uint8_t fontset[80] =
 // Constructor
 Chip8::Chip8()
 {
-    for (int i = 0; i < 16; i++)
-    {
-        stack[i] = 0;
-        V[i] = 0;
-        keys[i] = 0;
-    }
-
-    for (int i = 0; i < 4096; i++)
-    {
-        memory[i] = 0;
-    }
-
-    for (int i = 0; i < 64 * 32; i++)
-    {
-        gfx[i] = 0;
-    }
+    stack.fill(0);
+    memory.fill(0);
+    V.fill(0);
+    gfx.fill(0);
+    keys.fill(0);
 
     opcode = 0; 
     I = 0;
@@ -154,10 +143,7 @@ void Chip8::cycle()
             {
                 // 00E0: Clears the screen
                 case 0x0000:
-                    for (int i = 0; i < 64 * 32; i++)
-                    {
-                        gfx[i] = 0;
-                    }
+                    gfx.fill(0);
                     draw_flag = true;
                     break;
 

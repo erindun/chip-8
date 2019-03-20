@@ -55,7 +55,7 @@ bool setup_graphics()
     return true;
 }
 
-void draw(uint8_t gfx[])
+void draw(std::array<uint8_t, 64 * 32> gfx)
 {
     uint32_t pixels[64 * 32];
 
