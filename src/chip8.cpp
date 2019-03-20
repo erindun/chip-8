@@ -1,7 +1,6 @@
 #include <iostream>
 #include <iomanip>
 #include <fstream>
-//#include <cstdlib>
 #include <SDL2/SDL.h>
 #include "chip8.h"
 
@@ -353,7 +352,7 @@ void Chip8::cycle()
                 {
                     if ((pixel & (0x80 >> xline)) != 0)
                     {
-                        if (gfx[(V[x] + xline + ((V[y] + yline) * 64))] == 1)
+                        if (gfx[V[x] + xline + ((V[y] + yline) * 64)] == 1)
                         {   
                             V[0xF] = 1;
                         }
@@ -409,7 +408,7 @@ void Chip8::cycle()
                     
                     for (int i = 0; i < 16; i++)
                     {
-                        if( i != 0)
+                        if( keys[i] != 0)
                         {
                             V[x] = i;
                             key_pressed = true;
