@@ -44,7 +44,14 @@ int main(int argc, char **argv)
         if (chip8.draw_flag)
         {
             chip8.draw_flag = false;
-            draw(chip8.gfx);
+            if (chip8.extended_resolution)
+            {
+                draw(chip8.gfx_extended);
+            }
+            else
+            {
+                draw(chip8.gfx);
+            }
         }
 
         SDL_Delay(2.5);

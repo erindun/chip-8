@@ -22,9 +22,10 @@ class Chip8
     public:
         std::array<uint8_t, 16> keys;
         std::array<uint8_t, 64 * 32> gfx;
+        std::array<uint8_t, 128 * 64> gfx_extended;
         bool draw_flag;
         bool is_running;
-
+        bool extended_resolution;
 
         Chip8();
         bool load(const char filepath[]);

@@ -64,6 +64,7 @@ Chip8::Chip8()
 
     is_running = true;
     draw_flag = false;
+    extended_resolution = false;
 
     // Load fontset into memory
     for (int i = 0; i < 80; i++)
@@ -143,7 +144,14 @@ void Chip8::cycle()
             {
                 // 00E0: Clears the screen
                 case 0x0000:
-                    gfx.fill(0);
+                    if (extended_resolution)
+                    {
+                        gfx.fill(0);
+                    }
+                    else
+                    {
+                        gfx_extended.fill(0);
+                    }                    
                     draw_flag = true;
                     break;
 
@@ -156,6 +164,16 @@ void Chip8::cycle()
                 // 00FD (Super-CHIP): Exit CHIP interpreter
                 case 0x00FD:
                     is_running = false;
+                    break;
+
+                // 00FE (Super-CHIP): Disable extended mode
+                case 0x00FE:
+                    extended_resolution = false;
+                    break;
+
+                // 00FF (Super-CHIP): Enable extended mode
+                case 0x00FF:
+                    extended_resolution = true;
                     break;
 
                 default:

@@ -75,6 +75,26 @@ void draw(std::array<uint8_t, 64 * 32> gfx)
     SDL_RenderPresent(renderer);
 }
 
+void draw(std::array<uint8_t, 128 * 64> gfx)
+{
+    uint32_t pixels[128 * 64];
+
+    // Store pixels in temporary buffer
+    for (int i = 0; i < 128 * 64; ++i)
+    {
+        uint8_t pixel = gfx[i];
+        pixels[i] = (0x00FFFFFF * pixel) | 0xFF000000;
+    }
+
+    // Update texture
+    SDL_UpdateTexture(texture, NULL, pixels, 64 * sizeof(uint32_t));
+
+    // Clear screen and render
+    SDL_RenderClear(renderer);  
+    SDL_RenderCopy(renderer, texture, NULL, NULL);
+    SDL_RenderPresent(renderer);
+}
+
 void close_window()
 {
     SDL_DestroyWindow(window);
