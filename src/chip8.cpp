@@ -432,9 +432,20 @@ void Chip8::cycle()
                     break;
 
                 // FX1E: Adds VX to I
+                // (Undocumented feature: set VF to 1 if there is range 
+                // overflow (when (I + VX) > 0xFFF), set VF to 0 if
+                // there is not
                 case 0x001E:
+                    if (I + V[x] > 0xFFF)
+                    {
+                        V[0xF] = 1;
+                    }
+                    else
+                    {
+                        V[0xF] = 0;
+                    }
                     I += V[x];
-                    break;           
+                    break;
 
                 // FX29: Sets I to the location of the sprite in character VX.
                 // Characters 0-F (in hexadecimal) are represented by a 4x5
