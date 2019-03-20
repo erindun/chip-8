@@ -467,7 +467,7 @@ void Chip8::cycle()
                 // address I. The offset from I is increased by 1 for each
                 // value written, but I itself is left unmodified
                 case 0x0055:
-                    for (int i = 0; i <= V[x]; i++)
+                    for (int i = 0; i <= x; i++)
                     {
                         memory[I + i] = V[i];
                     }
@@ -477,7 +477,7 @@ void Chip8::cycle()
                 // starting at address I. The offset from I is increased by 1
                 // for each value written, but I itself is left unmodified
                 case 0x0065:
-                    for (int i = 0; i <= V[x]; i++)
+                    for (int i = 0; i <= x; i++)
                     {
                         V[i] = memory[I + i];
                     }
