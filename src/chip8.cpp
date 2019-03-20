@@ -1,7 +1,7 @@
 #include <iostream>
 #include <iomanip>
 #include <fstream>
-#include <cstdlib>
+//#include <cstdlib>
 #include <SDL2/SDL.h>
 #include "chip8.h"
 
@@ -368,7 +368,7 @@ void Chip8::cycle()
         case 0xE000:
             switch (opcode & 0x00FF)
             {
-                // EX9E: Skips the next instruction if they key stored in VX
+                // EX9E: Skips the next instruction if the key stored in VX
                 // is pressed
                 case 0x009E:
                     if (keys[V[x]] != 0)
@@ -434,7 +434,7 @@ void Chip8::cycle()
                 // FX1E: Adds VX to I
                 // (Undocumented feature: set VF to 1 if there is range 
                 // overflow (when (I + VX) > 0xFFF), set VF to 0 if
-                // there is not
+                // there is not)
                 case 0x001E:
                     if (I + V[x] > 0xFFF)
                     {
