@@ -73,6 +73,7 @@ Chip8::Chip8()
     delay_timer = 0;
     sound_timer = 0;
 
+    is_running = true;
     draw_flag = false;
 
     // Load fontset into memory
@@ -149,7 +150,7 @@ void Chip8::cycle()
     switch (opcode & 0xF000)
     {
         case 0x0000:
-            switch (opcode & 0x000F)
+            switch (opcode & 0x00FF)
             {
                 // 00E0: Clears the screen
                 case 0x0000:
@@ -161,9 +162,14 @@ void Chip8::cycle()
                     break;
 
                 // 00EE: Returns from subroutine
-                case 0x000E:
+                case 0x00EE:
                     sp--;
                     pc = stack[sp];
+                    break;
+
+                // 00FD (Super-CHIP): Exit CHIP interpreter
+                case 0x00FD:
+                    is_running = false;
                     break;
 
                 default:
@@ -453,6 +459,12 @@ void Chip8::cycle()
                     I = V[x] * 5;
                     break;
 
+                // FX30 (Super-CHIP): Sets I to the location of the sprite in
+                // digit VX
+                case 0x0030:
+                    I = V[x] * 10;
+                    break;
+
                 // Stores the binary-coded decimal representation of VX, with
                 // the most significant of three digits at the address in I,
                 // the middle digit at I plus 1, and the least significant
@@ -511,17 +523,17 @@ void Chip8::cycle()
 
 // Receive input from keyboard
 // Returns false if user requests quit
-bool Chip8::process_input()
+void Chip8::process_input()
 {
     SDL_Event e;
     while (SDL_PollEvent(&e) != 0)
     {
-        if (e.type == SDL_QUIT) return false; // Quit
+        if (e.type == SDL_QUIT) is_running = false; // Quit
 
         // Keydown events
         if (e.type == SDL_KEYDOWN)
         {
-            if (e.key.keysym.sym == SDLK_ESCAPE) return false; // Quit
+            if (e.key.keysym.sym == SDLK_ESCAPE) is_running = false;; // Quit
 
             for (int i = 0; i < 16; i++)
             {
@@ -544,6 +556,4 @@ bool Chip8::process_input()
             }
         }
     }
-
-    return true;
 }

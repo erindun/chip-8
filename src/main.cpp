@@ -33,18 +33,13 @@ int main(int argc, char **argv)
     }
 
     // Emulation cycled
-    bool quit = false;
-    while (!quit)
+    while (chip8.is_running)
     {
         // Emulate one cycle
         chip8.cycle();
         
         // Receive input from keyboard
-        // Returns false if user requests quit
-        if (!chip8.process_input())
-        {
-            return false;
-        }
+        chip8.process_input();
 
         if (chip8.draw_flag)
         {

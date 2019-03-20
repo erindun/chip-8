@@ -22,11 +22,13 @@ class Chip8
         uint8_t keys[16];
         uint8_t gfx[64 * 32];
         bool draw_flag;
+        bool is_running;
+
 
         Chip8();
         bool load(const char filepath[]);
         void cycle();
-        bool process_input();
+        void process_input();
 };
 
 #endif // CHIP8_H
