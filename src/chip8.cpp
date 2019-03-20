@@ -118,7 +118,10 @@ bool Chip8::load(const char filepath[])
         memory[i + 0x200] = rom_buffer[i];
     }
 
+    // Clean up
+    delete(rom_buffer);
     rom.close();
+
     return true;
 }
 
@@ -143,7 +146,7 @@ void Chip8::cycle()
             switch (opcode & 0x00FF)
             {
                 // 00E0: Clears the screen
-                case 0x0000:
+                case 0x00E0:
                     if (extended_resolution)
                     {
                         gfx.fill(0);
