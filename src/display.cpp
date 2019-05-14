@@ -9,11 +9,9 @@ SDL_Window *window;
 SDL_Renderer *renderer;
 SDL_Texture *texture;
 
-bool setup_graphics()
-{
+bool setup_graphics() {
     // Initialize SDL
-    if (SDL_Init(SDL_INIT_EVERYTHING) < 0)
-    {
+    if (SDL_Init(SDL_INIT_EVERYTHING) < 0) {
         std::cout << "SDL initialization failure. SDL_Error: "
                   << SDL_GetError() << std::endl;
         return false;
@@ -23,8 +21,7 @@ bool setup_graphics()
     window = SDL_CreateWindow("CHIP-8", SDL_WINDOWPOS_UNDEFINED,
                               SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH,
                               SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
-    if (window == nullptr)
-    {
+    if (window == nullptr) {
         std::cout << "Failed to create window. SDL_Error: " 
                   << SDL_GetError() << std::endl;
         return false;
@@ -33,8 +30,7 @@ bool setup_graphics()
     // Create renderer
     renderer = SDL_CreateRenderer(window, -1, 0);
     SDL_RenderSetLogicalSize(renderer, SCREEN_WIDTH, SCREEN_HEIGHT);
-    if (renderer == nullptr)
-    {
+    if (renderer == nullptr) {
         std::cout << "Failed to create renderer. SDL_Error: " 
                   << SDL_GetError() << std::endl;
         return false;
@@ -45,8 +41,7 @@ bool setup_graphics()
                                 SDL_PIXELFORMAT_ARGB8888,
                                 SDL_TEXTUREACCESS_STREAMING,
                                 64, 32);
-    if (texture == nullptr)
-    {
+    if (texture == nullptr) {
         std::cout << "Failed to create texture. SDL_Error: " 
                   << SDL_GetError() << std::endl;
         return false;
@@ -55,13 +50,11 @@ bool setup_graphics()
     return true;
 }
 
-void draw(std::array<uint8_t, 64 * 32> gfx)
-{
+void draw(std::array<uint8_t, 64 * 32> gfx) {
     std::array<uint32_t, 64 * 32> pixels;
 
     // Store pixels in temporary buffer
-    for (int i = 0; i < 64 * 32; ++i)
-    {
+    for (int i = 0; i < 64 * 32; ++i) {
         uint8_t pixel = gfx[i];
         pixels[i] = (0x00FFFFFF * pixel) | 0xFF000000;
     }
@@ -75,13 +68,11 @@ void draw(std::array<uint8_t, 64 * 32> gfx)
     SDL_RenderPresent(renderer);
 }
 
-void draw(std::array<uint8_t, 128 * 64> gfx)
-{
+void draw(std::array<uint8_t, 128 * 64> gfx) {
     std::array<uint32_t, 128 * 64> pixels;
 
     // Store pixels in temporary buffer
-    for (int i = 0; i < 128 * 64; ++i)
-    {
+    for (int i = 0; i < 128 * 64; ++i) {
         uint8_t pixel = gfx[i];
         pixels[i] = (0x00FFFFFF * pixel) | 0xFF000000;
     }
@@ -95,8 +86,7 @@ void draw(std::array<uint8_t, 128 * 64> gfx)
     SDL_RenderPresent(renderer);
 }
 
-void close_window()
-{
+void close_window() {
     SDL_DestroyWindow(window);
     window = nullptr;
     SDL_DestroyRenderer(renderer);

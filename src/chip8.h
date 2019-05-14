@@ -3,8 +3,7 @@
 #include <array>
 #include <cstdint>
 
-class Chip8
-{
+class Chip8 {
     private:
         uint16_t opcode;
         uint16_t I;
@@ -28,7 +27,7 @@ class Chip8
         bool extended_resolution;
 
         Chip8();
-        bool load(const char filepath[]);
+        bool load(const char* filepath);
         void cycle();
         void process_input();
 };

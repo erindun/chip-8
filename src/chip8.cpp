@@ -65,21 +65,18 @@ Chip8::Chip8()
     keys.fill(0);
 
     // Load fontset into memory
-    for (int i = 0; i < 80; i++)
-    {
+    for (int i = 0; i < 80; i++) {
         memory[i] = fontset[i];
     }
 }
 
 // Open ROM and load into memory
-bool Chip8::load(const char* filepath)
-{
+bool Chip8::load(const char* filepath) {
     std::cout << "Loading ROM: " << filepath << std::endl;
     std::ifstream rom(filepath, std::ifstream::binary);
 
     // Verify that ROM opens correctly
-    if (!rom)
-    {
+    if (!rom) {
         std::cerr << "Error: Failed to open ROM" << std::endl;
         return false;
     }
@@ -93,8 +90,7 @@ bool Chip8::load(const char* filepath)
     
     // Allocate memory for ROM
     auto rom_buffer = std::make_unique<char[]>(rom_size);
-    if (rom_buffer == nullptr)
-    {
+    if (rom_buffer == nullptr) {
         std::cerr << "Error: Failed memory allocation for ROM" << std::endl;
         return false;
     }
@@ -104,15 +100,13 @@ bool Chip8::load(const char* filepath)
 
     // Verify that ROM is of valid size
     // Available memory space begins at address 0x200
-    if (rom_size > (4096 - 0x200))
-    {
+    if (rom_size > (4096 - 0x200)) {
         std::cerr << "Error: ROM too large to load into memory" << std::endl;
         return false;
     }
 
     // Load ROM into memory
-    for (int i = 0; i < rom_size; i++)
-    {
+    for (int i = 0; i < rom_size; i++) {
         memory[i + 0x200] = rom_buffer[i];
     }
 
@@ -123,8 +117,7 @@ bool Chip8::load(const char* filepath)
 }
 
 // Complete one emulation cycle
-void Chip8::cycle()
-{
+void Chip8::cycle() {
     // Fetch opcode 
     opcode = memory[pc] << 8 | memory[pc + 1];
 
@@ -137,19 +130,14 @@ void Chip8::cycle()
     bool increment_pc = true;
 
     // Decode and execute opcode
-    switch (opcode & 0xF000)
-    {
+    switch (opcode & 0xF000) {
         case 0x0000:
-            switch (opcode & 0x00FF)
-            {
+            switch (opcode & 0x00FF) {
                 // 00E0: Clears the screen
                 case 0x00E0:
-                    if (extended_resolution)
-                    {
+                    if (extended_resolution) {
                         gfx.fill(0);
-                    }
-                    else
-                    {
+                    } else {
                         gfx_extended.fill(0);
                     }                    
                     draw_flag = true;
@@ -200,24 +188,21 @@ void Chip8::cycle()
 
         // 3XNN: Skips next instruction if VX equals NN
         case 0x3000:
-            if (V[x] == nn)
-            {
+            if (V[x] == nn) {
                 pc += 2;
             }
             break;
         
         // 4XNN: Skips next instruction if VX doesn't equal NN
         case 0x4000:
-            if (V[x] != nn)
-            {
+            if (V[x] != nn) {
                 pc += 2;
             }
             break;
 
         // 5XY0: Skips next instruction if VX equals VY
         case 0x5000:
-            if (V[x] == V[y])
-            {
+            if (V[x] == V[y]) {
                 pc += 2;
             }
             break;
@@ -233,8 +218,7 @@ void Chip8::cycle()
             break;
 
         case 0x8000:
-            switch (opcode & 0x000F)
-            {
+            switch (opcode & 0x000F) {
                 // 8XY0: Sets VX to the value of VY
                 case 0x0000:
                     V[x] = V[y];
@@ -259,12 +243,9 @@ void Chip8::cycle()
                 // and 1 when there isn't
                 case 0x0004:
                     V[x] += V[y];
-                    if (V[y] > (0xFF - V[x]))
-                    {
+                    if (V[y] > (0xFF - V[x])) {
                         V[0xF] = 1; // Carry
-                    }
-                    else
-                    {
+                    } else {
                         V[0xF] = 0;
                     }               
                     break;
@@ -272,12 +253,9 @@ void Chip8::cycle()
                 // 8XY5: VY is subtracted from VX. VF is set to 0 when there's
                 // a borrow, and 1 when there isn't
                 case 0x0005:
-                    if (V[y] > (V[x]))
-                    {
+                    if (V[y] > (V[x])) {
                         V[0xF] = 0; // Borrow
-                    }
-                    else
-                    {
+                    } else {
                         V[0xF] = 1;
                     }
                     V[x] -= V[y];               
@@ -293,12 +271,9 @@ void Chip8::cycle()
                 // 8XY7: Sets VX to VY minus VX. VF is set to 0 when there's
                 // a borrow, and 1 when there isn't
                 case 0x0007:
-                    if (V[x] > V[y])
-                    {
+                    if (V[x] > V[y]) {
                         V[0xF] = 0; // Borrow
-                    }
-                    else
-                    {
+                    } else {
                         V[0xF] = 1;
                     }
                     V[x] = V[y] - V[x];
@@ -321,8 +296,7 @@ void Chip8::cycle()
 
         // 9XY0: Skips the next instruction if VX doesn't equal VY
         case 0x9000:
-            if(V[x] != V[y])
-            {
+            if(V[x] != V[y]) {
                 pc += 2;
             }
             break;
@@ -350,20 +324,15 @@ void Chip8::cycle()
         // after the execution of this instruction. As described above, VF is
         // set to 1 if any screen pixels are flipped from set to unset when
         // the sprite is drawn, and to 0 if that doesn’t happen 
-        case 0xD000:
-        {
+        case 0xD000: {
             uint16_t pixel;
 
             V[0xF] = 0;
-            for (int yline = 0; yline < n; yline++)
-            {
+            for (int yline = 0; yline < n; yline++) {
                 pixel = memory[I + yline];
-                for (int xline = 0; xline < 8; xline++)
-                {
-                    if ((pixel & (0x80 >> xline)) != 0)
-                    {
-                        if (gfx[V[x] + xline + ((V[y] + yline) * 64)] == 1)
-                        {   
+                for (int xline = 0; xline < 8; xline++) {
+                    if ((pixel & (0x80 >> xline)) != 0) {
+                        if (gfx[V[x] + xline + ((V[y] + yline) * 64)] == 1) {
                             V[0xF] = 1;
                         }
                         gfx[V[x] + xline + ((V[y] + yline) * 64)] ^= 1;
@@ -375,13 +344,11 @@ void Chip8::cycle()
         }
 
         case 0xE000:
-            switch (opcode & 0x00FF)
-            {
+            switch (opcode & 0x00FF) {
                 // EX9E: Skips the next instruction if the key stored in VX
                 // is pressed
                 case 0x009E:
-                    if (keys[V[x]] != 0)
-                    {
+                    if (keys[V[x]] != 0) {
                         pc += 2;
                     }
                     break;
@@ -389,8 +356,7 @@ void Chip8::cycle()
                 // EXA1: Skips the next instruction if the key stored in VX
                 // isn't pressed
                 case 0x00A1:
-                    if (keys[V[x]] == 0)
-                    {
+                    if (keys[V[x]] == 0) {
                         pc += 2;
                     }
                     break;
@@ -404,22 +370,18 @@ void Chip8::cycle()
 
 
         case 0xF000:
-            switch (opcode & 0x00FF)
-            {
+            switch (opcode & 0x00FF) {
                 // FX07: Sets VX to the value of the delay timer
                 case 0x0007:
                     V[x] = delay_timer;
                     break;
 
                 // FX0A: A key press is awaited, and then stored in VX
-                case 0x000A:
-                {
+                case 0x000A: {
                     bool key_pressed;
                     
-                    for (int i = 0; i < 16; i++)
-                    {
-                        if( keys[i] != 0)
-                        {
+                    for (int i = 0; i < 16; i++) {
+                        if( keys[i] != 0) {
                             V[x] = i;
                             key_pressed = true;
                         }
@@ -445,12 +407,9 @@ void Chip8::cycle()
                 // overflow (when (I + VX) > 0xFFF), set VF to 0 if
                 // there is not)
                 case 0x001E:
-                    if (I + V[x] > 0xFFF)
-                    {
+                    if (I + V[x] > 0xFFF) {
                         V[0xF] = 1;
-                    }
-                    else
-                    {
+                    } else {
                         V[0xF] = 0;
                     }
                     I += V[x];
@@ -483,8 +442,7 @@ void Chip8::cycle()
                 // address I. The offset from I is increased by 1 for each
                 // value written, but I itself is left unmodified
                 case 0x0055:
-                    for (int i = 0; i <= x; i++)
-                    {
+                    for (int i = 0; i <= x; i++) {
                         memory[I + i] = V[i];
                     }
                     break;
@@ -493,8 +451,7 @@ void Chip8::cycle()
                 // starting at address I. The offset from I is increased by 1
                 // for each value written, but I itself is left unmodified
                 case 0x0065:
-                    for (int i = 0; i <= x; i++)
-                    {
+                    for (int i = 0; i <= x; i++) {
                         V[i] = memory[I + i];
                     }
                     break;
@@ -519,42 +476,33 @@ void Chip8::cycle()
     // Update timers
     if (delay_timer > 0) delay_timer--;
     if (sound_timer > 0) sound_timer--;
-    if (sound_timer == 0)
-    {
+    if (sound_timer == 0) {
         // TODO: Play sound
     }
 }
 
 // Receive input from keyboard
 // Returns false if user requests quit
-void Chip8::process_input()
-{
+void Chip8::process_input() {
     SDL_Event e;
-    while (SDL_PollEvent(&e) != 0)
-    {
+    while (SDL_PollEvent(&e) != 0) {
         if (e.type == SDL_QUIT) is_running = false; // Quit
 
         // Keydown events
-        if (e.type == SDL_KEYDOWN)
-        {
+        if (e.type == SDL_KEYDOWN) {
             if (e.key.keysym.sym == SDLK_ESCAPE) is_running = false;; // Quit
 
-            for (int i = 0; i < 16; i++)
-            {
-                if (e.key.keysym.sym == keyboard[i]) 
-                {
+            for (int i = 0; i < 16; i++) {
+                if (e.key.keysym.sym == keyboard[i]) {
                     keys[i] = 1;
                 }
             }
         }
 
         // Keyup events
-        if (e.type == SDL_KEYUP)
-        {
-            for (int i = 0; i < 16; i++)
-            {
-                if (e.key.keysym.sym == keyboard[i]) 
-                {
+        if (e.type == SDL_KEYUP) {
+            for (int i = 0; i < 16; i++) {
+                if (e.key.keysym.sym == keyboard[i]) {
                     keys[i] = 0;
                 }
             }
