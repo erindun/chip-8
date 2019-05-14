@@ -2,6 +2,8 @@
 #include <iomanip>
 #include <fstream>
 #include <SDL2/SDL.h>
+#include <memory>
+
 #include "chip8.h"
 
 // CHIP-8 fontset
@@ -74,7 +76,7 @@ Chip8::Chip8()
 }
 
 // Open ROM and load into memory
-bool Chip8::load(const char filepath[])
+bool Chip8::load(const char* filepath)
 {
     std::cout << "Loading ROM: " << filepath << std::endl;
     std::ifstream rom(filepath, std::ifstream::binary);
@@ -94,7 +96,7 @@ bool Chip8::load(const char filepath[])
 
     
     // Allocate memory for ROM
-    char* rom_buffer = new char[rom_size];
+    auto rom_buffer = std::make_unique<char[]>(rom_size);
     if (rom_buffer == nullptr)
     {
         std::cerr << "Error: Failed memory allocation for ROM" << std::endl;
@@ -102,7 +104,7 @@ bool Chip8::load(const char filepath[])
     }
 
     // Copy rom into buffer
-    rom.read(rom_buffer, rom_size);
+    rom.read(rom_buffer.get(), rom_size);
 
     // Verify that ROM is of valid size
     // Available memory space begins at address 0x200
@@ -119,7 +121,6 @@ bool Chip8::load(const char filepath[])
     }
 
     // Clean up
-    delete(rom_buffer);
     rom.close();
 
     return true;
