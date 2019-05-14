@@ -1,10 +1,8 @@
-SOURCES = src/chip8.cpp src/display.cpp src/main.cpp
-
 OBJS = chip8.o display.o main.o
 
-CC = g++
+CXX = g++
 
-CFLAGS = -Wall
+CXXFLAGS = -Wall -Werror
 
 # Compile for Windows (MinGW) and Linux
 ifeq ($(OS), Windows_NT)
@@ -14,16 +12,16 @@ else
 endif
 
 output: $(OBJS)
-	$(CC) $(SOURCES) $(CFLAGS) $(LFLAGS) -o chip8
+	$(CXX) $(OBJS) $(CXXFLAGS) $(LFLAGS) -o chip8
 
 main.o: src/main.cpp
-	$(CC) -c src/main.cpp
+	$(CXX) -c src/main.cpp
 
 chip8.o: src/chip8.cpp
-	$(CC) -c src/chip8.cpp
+	$(CXX) -c src/chip8.cpp
 
 display.o: src/display.cpp
-	$(CC) -c src/display.cpp
+	$(CXX) -c src/display.cpp
 
 clean:
 	rm *.o chip8
