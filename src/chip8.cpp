@@ -7,8 +7,7 @@
 #include "chip8.h"
 
 // CHIP-8 fontset
-uint8_t fontset[80] =
-{
+std::array<uint8_t, 80> fontset {
     0xF0, 0x90, 0x90, 0x90, 0xF0, // 0
     0x20, 0x60, 0x20, 0x20, 0x70, // 1
     0xF0, 0x10, 0xF0, 0x80, 0xF0, // 2
@@ -28,7 +27,7 @@ uint8_t fontset[80] =
 };
 
 // CHIP-8 hex keyboard
- uint8_t keyboard[16] {
+std::array<uint8_t, 16> keyboard {
     SDLK_1,
     SDLK_2,
     SDLK_3,
@@ -49,24 +48,21 @@ uint8_t fontset[80] =
 
 // Constructor
 Chip8::Chip8()
+    : opcode {0}
+    , I {0}
+    , pc {0x200}
+    , sp {0}
+    , delay_timer {0}
+    , sound_timer {0}
+    , draw_flag {false}
+    , is_running {true}
+    , extended_resolution {false}
 {
     stack.fill(0);
     memory.fill(0);
     V.fill(0);
     gfx.fill(0);
     keys.fill(0);
-
-    opcode = 0; 
-    I = 0;
-    pc = 0x200;
-
-    sp = 0;
-    delay_timer = 0;
-    sound_timer = 0;
-
-    is_running = true;
-    draw_flag = false;
-    extended_resolution = false;
 
     // Load fontset into memory
     for (int i = 0; i < 80; i++)
