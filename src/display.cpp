@@ -57,7 +57,7 @@ bool setup_graphics()
 
 void draw(std::array<uint8_t, 64 * 32> gfx)
 {
-    uint32_t pixels[64 * 32];
+    std::array<uint32_t, 64 * 32> pixels;
 
     // Store pixels in temporary buffer
     for (int i = 0; i < 64 * 32; ++i)
@@ -67,7 +67,7 @@ void draw(std::array<uint8_t, 64 * 32> gfx)
     }
 
     // Update texture
-    SDL_UpdateTexture(texture, NULL, pixels, 64 * sizeof(uint32_t));
+    SDL_UpdateTexture(texture, NULL, pixels.data(), 64 * sizeof(uint32_t));
 
     // Clear screen and render
     SDL_RenderClear(renderer);  
@@ -77,7 +77,7 @@ void draw(std::array<uint8_t, 64 * 32> gfx)
 
 void draw(std::array<uint8_t, 128 * 64> gfx)
 {
-    uint32_t pixels[128 * 64];
+    std::array<uint32_t, 128 * 64> pixels;
 
     // Store pixels in temporary buffer
     for (int i = 0; i < 128 * 64; ++i)
@@ -87,7 +87,7 @@ void draw(std::array<uint8_t, 128 * 64> gfx)
     }
 
     // Update texture
-    SDL_UpdateTexture(texture, NULL, pixels, 64 * sizeof(uint32_t));
+    SDL_UpdateTexture(texture, NULL, pixels.data(), 64 * sizeof(uint32_t));
 
     // Clear screen and render
     SDL_RenderClear(renderer);  
