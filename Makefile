@@ -1,4 +1,4 @@
-OBJS = chip8.o display.o main.o
+OBJS = chip8.o display.o input.o main.o
 
 CXX = g++
 
@@ -22,6 +22,9 @@ chip8.o: src/chip8.cpp
 
 display.o: src/display.cpp
 	$(CXX) -c src/display.cpp
+
+input.o: src/input.cpp
+	$(CXX) -c src/input.cpp
 
 clean:
 	rm *.o chip8

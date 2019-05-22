@@ -26,26 +26,6 @@ std::array<uint8_t, 80> fontset {
     0xF0, 0x80, 0xF0, 0x80, 0x80  // F
 };
 
-// CHIP-8 hex keyboard
-std::array<uint8_t, 16> keyboard {
-    SDLK_1,
-    SDLK_2,
-    SDLK_3,
-    SDLK_4,
-    SDLK_q,
-    SDLK_w,
-    SDLK_e,
-    SDLK_r,
-    SDLK_a,
-    SDLK_s,
-    SDLK_d,
-    SDLK_f,
-    SDLK_z,
-    SDLK_x,
-    SDLK_c,
-    SDLK_v
-};
-
 // Constructor
 Chip8::Chip8()
     : opcode {0}
@@ -478,34 +458,5 @@ void Chip8::cycle() {
     if (sound_timer > 0) sound_timer--;
     if (sound_timer == 0) {
         // TODO: Play sound
-    }
-}
-
-// Receive input from keyboard
-// Returns false if user requests quit
-void Chip8::process_input() {
-    SDL_Event e;
-    while (SDL_PollEvent(&e) != 0) {
-        if (e.type == SDL_QUIT) is_running = false; // Quit
-
-        // Keydown events
-        if (e.type == SDL_KEYDOWN) {
-            if (e.key.keysym.sym == SDLK_ESCAPE) is_running = false;; // Quit
-
-            for (int i = 0; i < 16; i++) {
-                if (e.key.keysym.sym == keyboard[i]) {
-                    keys[i] = 1;
-                }
-            }
-        }
-
-        // Keyup events
-        if (e.type == SDL_KEYUP) {
-            for (int i = 0; i < 16; i++) {
-                if (e.key.keysym.sym == keyboard[i]) {
-                    keys[i] = 0;
-                }
-            }
-        }
     }
 }

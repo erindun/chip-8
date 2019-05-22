@@ -2,6 +2,8 @@
 #include <cstdlib>
 #include <ctime>
 #include <SDL2/SDL.h>
+
+#include "input.h"
 #include "display.h"
 #include "chip8.h"
 
@@ -34,7 +36,7 @@ int main(int argc, char **argv) {
         chip8.cycle();
         
         // Receive input from keyboard
-        chip8.process_input();
+        process_input(chip8);
 
         if (chip8.draw_flag) {
             chip8.draw_flag = false;

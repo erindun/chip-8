@@ -1,5 +1,6 @@
 #include <iostream>
 #include <cstdint>
+#include <SDL2/SDL.h>
 #include "display.h"
 
 const int SCREEN_WIDTH = 1024;
@@ -84,6 +85,7 @@ void draw(std::array<uint8_t, 128 * 64> gfx) {
     SDL_RenderClear(renderer);  
     SDL_RenderCopy(renderer, texture, NULL, NULL);
     SDL_RenderPresent(renderer);
+
 }
 
 void close_window() {

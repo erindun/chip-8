@@ -29,7 +29,6 @@ class Chip8 {
         Chip8();
         bool load(const char* filepath);
         void cycle();
-        void process_input();
 };
 
 #endif // CHIP8_H
